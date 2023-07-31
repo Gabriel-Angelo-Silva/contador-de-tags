@@ -2,10 +2,13 @@ from flask import Flask, render_template, request
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '%'
+app.config['SITE_NAME'] = 'Contador de Tags HTML'
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    site_name = app.config['SITE_NAME']
+    return render_template('index.html', site_name=site_name)
 
 @app.route('/count_tags', methods=['POST'])
 def count_tags():
