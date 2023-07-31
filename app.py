@@ -7,11 +7,11 @@ app.config['SITE_NAME'] = 'Contador de Tags HTML'
 
 @app.route('/')
 def index():
-    site_name = app.config['SITE_NAME']
-    return render_template('index.html', site_name=site_name)
+    site_nome = app.config['SITE_NAME']
+    return render_template('index.html', site_nome=site_nome)
 
 @app.route('/count_tags', methods=['POST'])
-def count_tags():
+def contador_tag():
     codigo = request.form['codigo']
     contador_de_tags = contar_tags(codigo)
     return render_template('resultado.html', contador_de_tags = contador_de_tags)
