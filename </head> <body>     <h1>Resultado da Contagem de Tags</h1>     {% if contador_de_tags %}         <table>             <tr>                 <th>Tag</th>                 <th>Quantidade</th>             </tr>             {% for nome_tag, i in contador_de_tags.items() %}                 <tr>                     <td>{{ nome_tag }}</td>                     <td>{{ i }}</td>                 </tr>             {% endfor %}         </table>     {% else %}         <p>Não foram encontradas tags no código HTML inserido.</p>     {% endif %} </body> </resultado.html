@@ -1,0 +1,21 @@
+</head>
+<body>
+    <h1>Resultado da Contagem de Tags</h1>
+    {% if contador_de_tags %}
+        <table>
+            <tr>
+                <th>Tag</th>
+                <th>Quantidade</th>
+            </tr>
+            {% for nome_tag, i in contador_de_tags.items() %}
+                <tr>
+                    <td>{{ nome_tag }}</td>
+                    <td>{{ i }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Não foram encontradas tags no código HTML inserido.</p>
+    {% endif %}
+</body>
+</html>
