@@ -1,5 +1,7 @@
+#pip install requests
 from flask import Flask, render_template, request
 from bs4 import BeautifulSoup
+import requests
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '%'
@@ -12,16 +14,23 @@ def index():
 
 @app.route('/count_tags', methods=['POST'])
 def contador_tag():
-    codigo = request.form['codigo']
-    contador_de_tags = contar_tags(codigo)
-    return render_template('resultado.html', contador_de_tags = contador_de_tags)
+    url = request.form['url']
+    
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Check if the request was successful
+        codigo = response.text
+        contador_de_tags = contar_tags(codigo)
+        return render_template('resultado.html', contador_de_tags=contador_de_tags)
+    except requests.exceptions.RequestException as e:
+        return f"<p> Erro ao acessar a URL: {url}, verifique se esta correta </p>"
 
 def contar_tags(codigo):
     soup = BeautifulSoup(codigo, 'html.parser')
     tags = soup.find_all()
     contador_de_tags = {}
     
-  for tag in tags:
+    for tag in tags:
         nome_tag = tag.name
         contador_de_tags[nome_tag] = contador_de_tags.get(nome_tag, 0) + 1
     return contador_de_tags
