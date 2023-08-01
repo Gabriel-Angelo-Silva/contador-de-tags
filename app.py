@@ -8,32 +8,24 @@ app.config['SECRET_KEY'] = '%'
 app.config['SITE_NAME'] = 'Contador de Tags HTML'
 
 @app.route('/')
-def index():
-    site_nome = app.config['SITE_NAME']
-    return render_template('index.html', site_nome=site_nome)
+def indice():
+    return render_template('indice.html', site_nome=app.config['SITE_NAME'])
 
 @app.route('/count_tags', methods=['POST'])
 def contador_tag():
     url = request.form['url']
-    
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Check if the request was successful
-        codigo = response.text
-        contador_de_tags = contar_tags(codigo)
+        response.raise_for_status()
+        contador_de_tags = contar_tags(response.text)
         return render_template('resultado.html', contador_de_tags=contador_de_tags)
+        
     except requests.exceptions.RequestException as e:
-        return f"<p> Erro ao acessar a URL: {url}, verifique se esta correta </p>"
+        return f"<p>Erro ao acessar a URL: {url}, verifique se está correta </p>"
 
 def contar_tags(codigo):
     soup = BeautifulSoup(codigo, 'html.parser')
-    tags = soup.find_all()
     contador_de_tags = {}
-    
-    for tag in tags:
-        nome_tag = tag.name
-        contador_de_tags[nome_tag] = contador_de_tags.get(nome_tag, 0) + 1
+    for tag in soup.find_all():
+        contador_de_tags[tag.name] = contador_de_tags.get(tag.name, 0) + 1
     return contador_de_tags
-
-if __name__ == '__main__':
-    app.run(debug=True)
