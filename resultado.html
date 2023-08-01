@@ -26,10 +26,10 @@
                 <th>Tag</th>
                 <th>Quantidade</th>
             </tr>
-            {% for nome_tag, i in contador_de_tags.items() %}
+            {% for nome_tag, quantidade in contador_de_tags.items() %}
                 <tr>
                     <td>{{ nome_tag }}</td>
-                    <td>{{ i }}</td>
+                    <td>{{ quantidade }}</td>
                 </tr>
             {% endfor %}
         </table>
@@ -42,16 +42,16 @@
     <script>
         function downloadCSV() {
             let csvContent = "Tag,Quantidade\n";
-            {% for nome_tag, i in contador_de_tags.items() %}
-                csvContent += "{{ nome_tag }},{{ i }}\n";
+            {% for nome_tag, quantidade in contador_de_tags.items() %}
+                csvContent += "{{ nome_tag }},{{ quantidade }}\n";
             {% endfor %}
             downloadFile("contador_tags.csv", csvContent);
         }
 
         function downloadTXT() {
             let txtContent = "";
-            {% for nome_tag, i in contador_de_tags.items() %}
-                txtContent += "{{ nome_tag }}: {{ i }}\n";
+            {% for nome_tag, quantidade in contador_de_tags.items() %}
+                txtContent += "{{ nome_tag }}: {{ quantidade }}\n";
             {% endfor %}
             downloadFile("contador_tags.txt", txtContent);
         }
@@ -59,7 +59,7 @@
         function downloadFile(nome_arquivo, conteudo) {
             let element = document.createElement('a');
             element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(conteudo));
-            element.setAttribute('baixar', nome_arquivo);
+            element.setAttribute('download', nome_arquivo);
             element.style.display = 'none';
             document.body.appendChild(element);
             element.click();
