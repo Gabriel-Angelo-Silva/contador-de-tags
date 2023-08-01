@@ -5,23 +5,29 @@ import requests
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '%'
-app.config['SITE_NAME'] = 'Contador de Tags HTML'
+app.config['NOME_SITE'] = 'Contador de Tags HTML'
 
 @app.route('/')
 def indice():
-    return render_template('indice.html', site_nome=app.config['SITE_NAME'])
+    return render_template('indice.html', nome_site=app.config['NOME_SITE'])
 
-@app.route('/count_tags', methods=['POST'])
+@app.route('/contar_tags', methods=['POST'])
 def contador_tag():
-    url = request.form['url']
+    entrada_dados = request.form['entrada_dados']
+    
     try:
-        response = requests.get(url)
-        response.raise_for_status()
-        contador_de_tags = contar_tags(response.text)
-        return render_template('resultado.html', contador_de_tags=contador_de_tags)
-        
+        codigo = obter_codigo(entrada_dados)
+        contador_de_tags = contar_tags(codigo)
+        return render_template('resultado.html', contador_de_tags = contador_de_tags)
     except requests.exceptions.RequestException as e:
-        return f"<p>Erro ao acessar a URL: {url}, verifique se está correta </p>"
+        return "<p>Erro ao acessar a URL ou analisar o código HTML.</p>"
+
+def obter_codigo(entrada_dados):
+    if entrada_dados.startswith(("http://", "https://")):
+        resposta = requests.get(entrada_dados)
+        resposta.raise_for_status()
+        return resposta.text
+    return entrada_dados
 
 def contar_tags(codigo):
     soup = BeautifulSoup(codigo, 'html.parser')
