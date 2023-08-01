@@ -33,8 +33,38 @@
                 </tr>
             {% endfor %}
         </table>
+        <button onclick="downloadCSV()">Baixar como CSV</button>
+        <button onclick="downloadTXT()">Baixar como Texto</button>
     {% else %}
         <p>Não foram encontradas tags no código HTML inserido.</p>
     {% endif %}
+
+    <script>
+        function downloadCSV() {
+            let csvContent = "Tag,Quantidade\n";
+            {% for nome_tag, i in contador_de_tags.items() %}
+                csvContent += "{{ nome_tag }},{{ i }}\n";
+            {% endfor %}
+            downloadFile("contador_tags.csv", csvContent);
+        }
+
+        function downloadTXT() {
+            let txtContent = "";
+            {% for nome_tag, i in contador_de_tags.items() %}
+                txtContent += "{{ nome_tag }}: {{ i }}\n";
+            {% endfor %}
+            downloadFile("contador_tags.txt", txtContent);
+        }
+
+        function downloadFile(filename, content) {
+            let element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+    </script>
 </body>
 </html>
