@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ site_nome }}</title>
+</head>
+<body>
+    <h1 style="text-align: center; margin-top: 50px;">{{ site_nome }}</h1>
+    <div style="text-align: center; margin-top: 20px;">
+        <form action="/count_tags" method="post">
+            <input type="text" name="url" placeholder="Digite a URL do site" required>
+            <br>
+            <input type="submit" value="Contar">
+        </form>
+    </div>
+</body>
+</html>
